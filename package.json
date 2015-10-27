@@ -1,0 +1,14 @@
+{
+  "name": "a3",
+  "description": "An app for Azure",
+  "version": "0.0.1",
+  "dependencies": {
+    "koa": "*"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "istanbul": "*"
+  },
+  "repository": "https://github.com/algoriz/a3.git",
+  "homepage": "https://github.com/algoriz/a3"
+}
