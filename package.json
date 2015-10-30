@@ -1,13 +1,14 @@
 {
   "engines": {
-    "node": {"version": ">=4.2.1"}
+    "node": ">=4.2.1"
   },
   "name": "a3",
   "description": "An app for Azure",
   "version": "0.0.1",
   "main": "server.js",
   "dependencies": {
-    "koa": "*",
+    "koa": ">=1.1.1",
+    "koa-route": ">=2.4.2",
     "koa-body-parser": "*"
   },
   "devDependencies": {
