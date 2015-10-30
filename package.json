@@ -4,7 +4,8 @@
   "version": "0.0.1",
   "main": "server.js",
   "dependencies": {
-    "koa": "*"
+    "koa": "*",
+    "koa-body-parser": "*"
   },
   "devDependencies": {
     "mocha": "*",
