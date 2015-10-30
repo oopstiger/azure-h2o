@@ -1,4 +1,7 @@
 {
+  "engines": {
+    "node": {"version": ">=4.2.1"}
+  },
   "name": "a3",
   "description": "An app for Azure",
   "version": "0.0.1",
