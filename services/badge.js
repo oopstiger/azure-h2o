@@ -57,24 +57,36 @@ module.exports = function (app){
       head: {
         text: q.h || '',
         color: q.hc ? ('#' + q.hc) : '#555',
-        width: q.hw || 0
+        width: parseFloat(q.hw) || 0
       },
       body: {
         text: q.b || '',
         color: q.bc ? ('#' + q.bc) : '#007ec6',
-        width: q.bw || 0
+        width: parseFloat(q.bw) || 0
       }
     };
+    console.log(query.head.width);
     response.call(this);
   });
 };
 
+function calculateTextWidth(text){
+  const CHAR_AVG_WIDTH = 7.5;
+  let chars = 0;
+  for (let i = 0, n = text.length; i < n; ++i){
+    if (text.charCodeAt(i) > 255){
+      chars += 1;
+    }
+    chars += 1;
+  }
+  return CHAR_AVG_WIDTH * chars;
+}
+
 function badge(query){
   let head = query.head;
   let body = query.body;
-  const CHAR_AVG_WIDTH = 7.5;
-  let a = query.body.width ? query.head.width : 8 + head.text.length * CHAR_AVG_WIDTH;
-  let b = query.body.width ? query.body.width : 8 + body.text.length * CHAR_AVG_WIDTH;
+  let a = head.width ? head.width : 8 + calculateTextWidth(head.text);
+  let b = body.width ? body.width : 8 + calculateTextWidth(body.text);
   let width = a + b;
 
   if (query.style === 'travis'){
