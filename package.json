@@ -3,7 +3,7 @@
     "node": ">=4.2.1"
   },
   "name": "a3",
-  "description": "An app for Azure",
+  "description": "A collection of web apps.",
   "version": "0.0.1",
   "main": "server.js",
   "dependencies": {
@@ -17,6 +17,10 @@
     "mocha": "*",
     "istanbul": "*"
   },
-  "repository": "https://github.com/algoriz/a3.git",
-  "homepage": "https://github.com/algoriz/a3"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/algoriz/a3.git"
+  },
+  "homepage": "https://github.com/algoriz/a3",
+  "license": "MIT"
 }
