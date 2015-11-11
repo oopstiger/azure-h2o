@@ -11,7 +11,11 @@ Generates a SVG image like:
 
 API Path: /badge 
 
-Example: http://h2o.azurewebsites.net/badge?h=hello&b=word&bc=4c1
+e.g. The following link generates ![Demo Badge](http://h2o.azurewebsites.net/badge?h=hello&b=word) 
+
+    http://h2o.azurewebsites.net/badge?h=head&b=body
+
+Parameters that can be used to customize the badge:
 
 param | required | description
 ---- | ---- | ---- 
