@@ -9,14 +9,24 @@ app path | description
 > **NOTE**<br/>
 > http://h2o.azurewebsites.net/ is a test site hosted on a Azure **free** pricing plan container. Thus the service is unstable.
 
-## badge - A badge svg image generator
+## badge - A badge SVG image generator
 ### API
 
     GET /badge?head=head&body=body
 
-e.g. The following link generates ![Demo Badge](http://h2o.azurewebsites.net/badge?head=hello&body=word)
+Or by POST method:
 
-    http://h2o.azurewebsites.net/badge?head=hello&body=word
+    POST /badge
+
+```json
+{
+  "head": "head",
+  "body": "body"
+}
+```
+e.g. The following link generates ![Demo Badge](http://h2o.azurewebsites.net/badge?head=hello&body=world)
+
+    http://h2o.azurewebsites.net/badge?head=hello&body=world
 
 ### Parameters
 Name | Type | Required | Description
