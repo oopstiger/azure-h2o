@@ -1,0 +1,44 @@
+{
+  "site": {
+    "favicon": "https://github.com/favicon.ico",
+    "homepage": "https://github.com/algoriz/azure-h2o/blob/master/README.md"
+  },
+  "log4js": {
+    "appenders": [{
+        "category": "app",
+        "type": "console",
+        "layout": {
+          "type": "pattern",
+          "pattern": "[%d{yyyy-MM-dd hh:mm:ss.SSS}] %-5p %m"
+        }
+      },
+      {
+        "category": "app",
+        "type": "file",
+        "filename": "log/app.log",
+        "maxLogSize": 20480,
+        "backups": 2,
+        "layout": {
+          "type": "pattern",
+          "pattern": "[%d{yyyy-MM-dd hh:mm:ss.SSS}] %-5p %m"
+        }
+      },
+      {
+        "category": "trace",
+        "type": "file",
+        "filename": "log/trace.log",
+        "maxLogSize": 20480,
+        "backups": 2,
+        "layout": {
+          "type": "pattern",
+          "pattern": "[%d{yyyy-MM-dd hh:mm:ss.SSS}] %-5p %m"
+        }
+      }
+    ],
+    "replaceConsole": true
+  },
+
+  "droplets": {
+    "maxApps": 32
+  }
+}

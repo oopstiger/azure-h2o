@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const log4js = require('log4js');
 
 let app = require('koa')();
 let router = require('koa-router')();
@@ -10,7 +11,7 @@ let bodyParser = require('koa-body-parser')();
 let port = process.env.PORT || 1337;
 
 
-function *trace(next) {
+function *traceRT(next) {
   let method = this.request.method;
   let url = this.request.url;
   let rt = Date.now();
@@ -18,36 +19,50 @@ function *trace(next) {
   rt = Date.now() - rt;
   let status = this.response.status;
 
-  if (status === 200) {
-    app.tracing.info('[' + rt + 'ms]' + status + ' ' + method + ' ' + url);
+  if (!status) {
+    status = 404; // not handled
   }
-  else {
-    if (!status) {
-      status = 404; // not handled
-    }
-    app.tracing.error('[' + rt + 'ms]' + status + ' ' + method + ' ' + url);
+  app.trace.info('[' + rt + 'ms] ' + status + ' ' + method + ' ' + url);
+}
+
+function setupLogging(){
+  if (!fs.existsSync('./log')){
+    fs.mkdirSync('./log');
   }
+  app.config = require('./config.json');
+  log4js.configure(app.config.log4js);
+
+  app.logging = log4js.getLogger('app');
+  app.trace = log4js.getLogger('trace');
 }
 
 function startup(){
-  app.logging = console;
-  app.tracing = console;
-  app.router = router;
-  app.use(trace);
+  setupLogging();
 
-  fs.readdirSync('./services').forEach(function (script){
-    if (script.startsWith('.') || !script.endsWith('.js')){
+  app.router = router;
+  app.use(traceRT);
+  app.use(bodyParser);
+
+  app.logging.info('bring up services...');
+  fs.readdirSync('./services').forEach(function (moduleName){
+    if (moduleName.startsWith('.')){
       return;
     }
-    let mod = require('./services/' + script);
-    mod(app);
+    try {
+      require('./services/' + moduleName)(app);
+    }
+    catch (err){
+      app.logging.error('module [' + moduleName + '] fail to load:', err);
+    }
   });
 
-  app.use(router.routes())
-      .use(router.allowedMethods())
-      .use(bodyParser);
+  app.use(router.routes()).use(router.allowedMethods());
+
+  app.logging.info('bring up site basics...');
+  require('./site')(app);
 
   app.listen(port);
+  app.logging.info('azure-h2o is up and running now.\n\n');
 }
 
 startup();
