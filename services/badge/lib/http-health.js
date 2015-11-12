@@ -7,10 +7,43 @@ const xcheck = require('xcheck');
 
 let args = xcheck.createTemplate({
   'url not null': ':string',
-  title: '',
   'check-response-time': ':string',
-  'check-status': '200'
+  'check-status': '200',
+  style: 'travis',
+  foreground: '#ffffff',
+  head: '',
+  'head-color': '#555555',
+  'head-width': 0,
+  'body-width': 0
 });
+
+function FreqWall(){
+  this._trace = new Map();
+}
+
+FreqWall.prototype.grant = function (hostname){
+  let tm = Date.now();
+  let lastAccess = this._trace.get(hostname);
+  if (lastAccess && tm - lastAccess < 30000){
+    return false;
+  }
+  this._trace.set(hostname, tm);
+  return true;
+};
+
+FreqWall.prototype.startScan = function (){
+  let tm = Date.now();
+  let self = this;
+  self._trace.forEach(function (v, k){
+    if (tm - v >= 30000){
+      self._trace.delete(k);
+    }
+  });
+
+  setTimeout(function(){
+    self.startScan();
+  }, 15000);
+};
 
 function getStatusColor(status) {
   status = status.toUpperCase();
@@ -44,6 +77,12 @@ function normalizeRT(rt) {
     return null;
   }
 }
+
+let freqWall = function (){
+  let fw = new FreqWall();
+  fw.startScan();
+  return fw;
+}();
 
 function getHostStatus(parsedURL, query) {
   let options = {
@@ -85,6 +124,12 @@ function getHostStatus(parsedURL, query) {
 }
 
 function* handleQuery(ctx, query) {
+  if (!freqWall){
+    freqWall = new FreqWall();
+    freqWall.startScan();
+  }
+
+  let app = ctx.app;
   try {
     query = args.validate(query, {applyDefaults: true});
     let parsedURL = url.parse(normalizeURL(query.url));
@@ -92,12 +137,20 @@ function* handleQuery(ctx, query) {
       query.head = parsedURL.hostname;
     }
 
+    if (!freqWall.grant(parsedURL.hostname)){
+      ctx.body = 'Forbidden.';
+      ctx.status = 403;
+      return;
+    }
+
+    app.trace.info('health-check ' + query.url);
+
     query.body = yield getHostStatus(parsedURL, query);
     ctx.body = renderHealthImage(query);
     ctx.type = 'image/svg+xml';
   }
   catch (err) {
-    ctx.body = 'Bad Request: ' + err;
+    ctx.body = 'Bad Request.';
     ctx.status = 400;
   }
 }
