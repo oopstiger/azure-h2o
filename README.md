@@ -33,12 +33,12 @@ Name | Type | Required | Description
 ---- | ---- | ---- | ----
 head | string | YES | head text
 body | string | YES | body text
-head-color | string | NO | head color, default #555*
-body-color | string | NO | body color, default #007ec6
+head-color | string | NO | head color, default #555555(dark gray)*
+body-color | string | NO | body color, default #7cbb00(green)
 head-width | number | NO | head width, default 0(auto)*
 body-width | number | NO | body width, default 0(auto)
 style | string | NO | badge style, may be 'travis' or 'flat'
-foreground | string | NO | text color, default white(#fff)
+foreground | string | NO | text color, default #ffffff(white)
 
 > NOTE<br/>
 > - For convenience, color values such as `head-color` can be passed without '#' prefix.
